@@ -8,7 +8,7 @@ const app = express();
 
 loaders
   .run()
-  .then(({ contract }) => {
+  .then(({ contract, pushProtocolSDK }) => {
     app.use(express.urlencoded({ limit: '5mb', extended: true }));
     app.use(express.json({ limit: '5mb' }));
 
@@ -18,7 +18,7 @@ loaders
     });
 
     // Main app route(s)
-    app.use('/api/v1', apiRoutes({ contract }));
+    app.use('/api/v1', apiRoutes({ contract, pushProtocolSDK }));
 
     // Error handlers
     process.on('uncaughtException', (err) => {

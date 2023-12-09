@@ -19,8 +19,9 @@
   },
   "homepage": "https://github.com/Rishabh570/ETHIndia-backend#readme",
   "dependencies": {
+    "@pushprotocol/restapi": "^1.4.45",
     "cors": "^2.8.5",
-    "ethers": "^6.9.0",
+    "ethers": "^5.7.2",
     "express": "^4.18.2",
     "mongoose": "^8.0.3",
     "octonode": "^0.10.2",
