@@ -43,13 +43,13 @@ module.exports = ({ contract, pushProtocolSDK }) => {
       // TODO: If PR merged - we need wallet address of author(s) and supporter(s)
       // TODO: If PR closed - same
       // TODO: IF commit added - wallet address of author(s)
-      const apiResponse = await pushProtocolSDK.channel.send(['0x008Bb226aF820808810211dBe1E6e541D4Ec5D8E'], {
-        notification: {
-          title: 'Hello World Notification',
-          body: 'Web3 native notifications are here!',
-        }
-      });
-      console.log('apiResponse: ', apiResponse);
+      // const apiResponse = await pushProtocolSDK.channel.send(['0x008Bb226aF820808810211dBe1E6e541D4Ec5D8E'], {
+      //   notification: {
+      //     title: 'Hello World Notification',
+      //     body: 'Web3 native notifications are here!',
+      //   }
+      // });
+      // console.log('apiResponse: ', apiResponse);
 
       // Sending notifications ends
 
