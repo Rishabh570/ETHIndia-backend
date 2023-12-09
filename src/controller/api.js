@@ -4,31 +4,66 @@ const { HTTP_STATUS_CODES } = require('../../constants');
 
 const client = octonode.client("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");
 
-
-// Import Push SDK & Ethers
-// const { PushAPI } = require('@pushprotocol/restapi');
-// const {ethers } = require('ethers');
-
-// Using random signer from a wallet, ideally this is the wallet you will connect
-// const signer = ethers.Wallet.createRandom();
-
-// Initialize wallet user, pass 'prod' instead of 'staging' for mainnet apps
-
 module.exports = ({ contract, pushProtocolSDK }) => {
   async function processWebhook(req, res) {
     try {  
-      // await service.itemService.create();
       console.log('processing webhook...');
-      console.log('processing webhook finished!');
-      console.log('req: ', req);
+      console.log('req.body: ', req.body);
+      console.log('req.body = ', req.action);
+      const { action, merged_at, pull_request } = req.body;
 
-      
-      
+
       // TODO: Check the type of webhook
       // - If PR merged, send each authors' diff to the contract (contract will do the calculation; improvement do it using chainlink fn)
       // - If PR closed, tell contract to refund supporters (aka stakers)
       // - If a commit push event, tell the contract to update the PR => author mapping if doesn't exist already in map
       // ignore otherwise
+
+      // 1. PR is merged
+      if (action === 'closed' && merged_at !== null) {
+        const usernameToCommitsCountArr = [];
+        // fetch PR -> get commits and their authors' data
+        // store a mapping of username <> no. of commits and send to contract in format it expects
+        client.pr(pull_request.number).commits((err, data) => {
+          console.log('err: ', err);
+          console.log('data: ', data);
+          if (err) {
+            console.error('Error:', err.message);
+            return;
+          }
+
+          if (!data || data.length == 0) {
+            console.log('No data returned from PR commits');
+            throw new Error('No commits in PR');
+          }
+      
+          // Print the list of commits
+          console.log('Commits:');
+          const commitObj = {};
+          data.forEach(commit => {
+            console.log('commit : ', commit);
+            commitObj[commit.commit.author.name] += 1;
+          });
+          
+          console.log('commitObj: ', JSON.stringify(commitObj, null, 2));
+
+          const finalCommittersObj = Object.keys(commitObj).map((authorName) => {
+            return {
+              username: authorName,
+              commits: commitObj[authorName],
+              award: 0,
+            }
+          });
+
+          console.log('finalCommittersObj: ', finalCommittersObj);
+
+          //TODO: Send finalCommittersObj to comtract
+          
+        });
+      }
+      else if (action === 'closed' && merged_at === null) {
+        // TODO: Call contract with just the PR string (remove host name)
+      }
 
 
 
@@ -43,13 +78,13 @@ module.exports = ({ contract, pushProtocolSDK }) => {
       // TODO: If PR merged - we need wallet address of author(s) and supporter(s)
       // TODO: If PR closed - same
       // TODO: IF commit added - wallet address of author(s)
-      // const apiResponse = await pushProtocolSDK.channel.send(['0x008Bb226aF820808810211dBe1E6e541D4Ec5D8E'], {
-      //   notification: {
-      //     title: 'Hello World Notification',
-      //     body: 'Web3 native notifications are here!',
-      //   }
-      // });
-      // console.log('apiResponse: ', apiResponse);
+      const apiResponse = await pushProtocolSDK.channel.send(['0x008Bb226aF820808810211dBe1E6e541D4Ec5D8E'], {
+        notification: {
+          title: 'Hello World Notification',
+          body: 'Web3 native notifications are here!',
+        }
+      });
+      console.log('apiResponse: ', apiResponse);
 
       // Sending notifications ends
 
