@@ -63,6 +63,7 @@ module.exports = ({ contract, pushProtocolSDK }) => {
         data: null,
       });
     } catch (err) {
+      console.log('err: ', err);
       return res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
         status: false,
         message: 'Could not process webhook',
