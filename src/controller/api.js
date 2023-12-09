@@ -82,6 +82,9 @@ module.exports = ({ contract, pushProtocolSDK }) => {
         notification: {
           title: 'Hello World Notification',
           body: 'Web3 native notifications are here!',
+        },
+        payload: {
+          category: 1
         }
       });
       console.log('apiResponse: ', apiResponse);
@@ -111,6 +114,7 @@ module.exports = ({ contract, pushProtocolSDK }) => {
   // fetches open PRs, and communicates with smart contract to store retrieved info into the mapping
   async function init(req, res) {
     try {
+      const { body } = req;
       // TODO: Get user and repo name from chrome extension
       // extension will hit /api/v1/init when repo owner clicks on onboard from the extension
       const ghrepo = client.repo('rishabh570/all-contributors-test');
@@ -127,6 +131,7 @@ module.exports = ({ contract, pushProtocolSDK }) => {
         // Store data from sync to the chain in mappings (refer google doc for mappings)
 
   
+        res.setHeader('Access-Control-Allow-Origin', '*');
         return res.status(HTTP_STATUS_CODES.SUCCESS).json({
           status: true,
           message: 'Initial sync is successful',
