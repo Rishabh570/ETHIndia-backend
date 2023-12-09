@@ -1,4 +1,5 @@
 const octonode = require('octonode');
+const config = require('../../config');
 
 const { HTTP_STATUS_CODES } = require('../../constants');
 
