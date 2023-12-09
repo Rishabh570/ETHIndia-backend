@@ -2,7 +2,7 @@ const octonode = require('octonode');
 
 const { HTTP_STATUS_CODES } = require('../../constants');
 
-const client = octonode.client("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");
+const client = octonode.client(config.GITHUB_ACCESS_TOKEN);
 
 module.exports = ({ contract, pushProtocolSDK }) => {
   async function processWebhook(req, res) {
@@ -114,7 +114,6 @@ module.exports = ({ contract, pushProtocolSDK }) => {
   // fetches open PRs, and communicates with smart contract to store retrieved info into the mapping
   async function init(req, res) {
     try {
-      const { body } = req;
       // TODO: Get user and repo name from chrome extension
       // extension will hit /api/v1/init when repo owner clicks on onboard from the extension
       const ghrepo = client.repo('rishabh570/all-contributors-test');
